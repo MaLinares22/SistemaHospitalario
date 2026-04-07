@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="jakarta.faces.core">
+<h:head>
+    <title>Hospital - Panel Principal</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+</h:head>
+<h:body style="background-color: #f4f7f6;">
+
+    <h:form id="headerForm">
+        <div style="text-align: right; padding: 15px;">
+            <p:commandButton value="Cerrar Sesión" icon="pi pi-sign-out"
+                             action="#{LoginBean.salir}"
+                             styleClass="ui-button-danger ui-button-flat" />
+        </div>
+    </h:form>
+
+    <div class="dashboard-container">
+        <h1 class="main-title">SISTEMA DE GESTIÓN HOSPITALARIA</h1>
+
+        <p:panel styleClass="info-card">
+            <f:facet name="header">
+                <i class="pi pi-info-circle" style="margin-right: 10px;"></i>
+                Información del Proyecto
+            </f:facet>
+            <p style="font-size: 1.1rem; color: #555;">
+                Plataforma centralizada para la administración de expedientes clínicos,
+                programación de citas y control de acceso de personal.
+            </p>
+
+            <p:separator style="margin: 20px 0;" />
+
+            <h4 style="color: #2c3e50; text-align: left;">Equipo de Desarrollo:</h4>
+            <div class="team-list">
+                <div class="team-item">
+                    <span class="team-name">Jenson Geovany Arita Reyes</span>
+                    <span class="team-id">Cuenta: 201230010015</span>
+                </div>
+                <div class="team-item">
+                    <span class="team-name">Manuel Alejandro Linares Valenzuela</span>
+                    <span class="team-id">Cuenta: 202410011073</span>
+                </div>
+                <div class="team-item">
+                    <span class="team-name">Michael Javier Turcios Aparicio</span>
+                    <span class="team-id">Cuenta: 202020010114</span>
+                </div>
+            </div>
+        </p:panel>
+
+        <div class="nav-section">
+            <h3 style="margin-bottom: 20px; color: #607D8B;">Módulos del Sistema</h3>
+            <p:button value="Pacientes" icon="pi pi-users" outcome="editar.xhtml"
+                      styleClass="ui-button-raised ui-button-info" style="width: 180px; margin: 10px"/>
+
+            <p:button value="Citas Médicas" icon="pi pi-calendar" outcome="citas.xhtml"
+                      styleClass="ui-button-raised ui-button-help" style="width: 180px; margin: 10px"/>
+
+            <p:button value="Configuración" icon="pi pi-cog" outcome="configuracion.xhtml"
+                      styleClass="ui-button-raised ui-button-secondary" style="width: 180px; margin: 10px"/>
+        </div>
+
+        <div class="github-section">
+            <h:outputLink value="https://github.com/tu-usuario/tu-repositorio" target="_blank" style="text-decoration: none;">
+                <p:chip label="Ver Código Fuente en GitHub" icon="pi pi-github" style="cursor: pointer;" />
+            </h:outputLink>
+        </div>
+    </div>
+</h:body>
+</html>

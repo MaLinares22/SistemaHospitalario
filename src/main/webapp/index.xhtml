@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Acceso al Sistema - Hospital</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+</h:head>
+<h:body styleClass="login-body">
+
+    <div class="login-container">
+        <h:form id="loginForm">
+            <p:growl id="growl" showDetail="true" />
+
+            <p:card styleClass="login-card" style="width: 25rem;">
+                <f:facet name="title">
+                    GESTIÓN HOSPITALARIA
+                    <br/>
+                    <small style="font-size: 0.8rem; color: #6c757d;">Acceso Grupo 2</small>
+                </f:facet>
+
+                <div class="ui-fluid" style="margin-top: 10px;">
+                    <div class="p-field" style="margin-bottom: 15px;">
+                        <p:outputLabel for="user" value="Nombre de Usuario" />
+                        <p:inputText id="user" value="#{LoginBean.usuario}"
+                                     required="true" placeholder="Ingrese su usuario" />
+                    </div>
+
+                    <div class="p-field" style="margin-bottom: 10px;">
+                        <p:outputLabel for="pass" value="Contraseña" />
+                        <p:password id="pass" value="#{LoginBean.clave}"
+                                    required="true" toggleMask="true"
+                                    placeholder="••••••••" />
+                    </div>
+                </div>
+
+                <f:facet name="footer">
+                    <p:commandButton icon="pi pi-sign-in" value="Ingresar al Sistema"
+                                     action="#{LoginBean.autenticar}" update="growl"
+                                     styleClass="btn-login" />
+                </f:facet>
+            </p:card>
+        </h:form>
+    </div>
+</h:body>
+</html>

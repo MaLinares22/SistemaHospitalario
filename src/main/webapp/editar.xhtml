@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Hospital - Gestión de Pacientes</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+</h:head>
+
+<h:body>
+    <div class="main-content">
+        <p:growl id="msjs" showDetail="true" />
+
+        <h:form id="menuForm">
+            <p:menubar styleClass="ui-menubar">
+                <p:menuitem value="Inicio" icon="pi pi-home" url="inicio.xhtml" />
+                <p:submenu label="Expedientes" icon="pi pi-folder-open">
+                    <p:menuitem value="Pacientes" icon="pi pi-users" url="editar.xhtml" />
+                    <p:menuitem value="Citas Médicas" icon="pi pi-calendar-plus" url="citas.xhtml" />
+                </p:submenu>
+                <p:submenu label="Configuración" icon="pi pi-cog">
+                    <p:menuitem value="Usuarios" icon="pi pi-user-edit" url="configuracion.xhtml" />
+                </p:submenu>
+                <f:facet name="options">
+                    <p:commandButton value="Cerrar Sesión" icon="pi pi-sign-out"
+                                     styleClass="ui-button-flat ui-button-plain" action="#{LoginBean.salir()}" />
+                </f:facet>
+            </p:menubar>
+        </h:form>
+
+        <h:form id="formPrincipal">
+            <p:panel header="Ficha de Registro de Paciente" styleClass="form-panel">
+                <p:panelGrid id="panelDatos" columns="4" layout="grid"
+                             columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
+                             styleClass="ui-panelgrid-blank ui-fluid">
+
+                    <p:outputLabel for="nombre" value="Nombre Completo:" />
+                    <p:inputText id="nombre" value="#{HospitalBean.pacienteActual.nombre}"
+                                 required="true" placeholder="Nombre y Apellidos" />
+
+                    <p:outputLabel for="identidad" value="N° de Identidad:" />
+                    <p:inputText id="identidad" value="#{HospitalBean.pacienteActual.identidad}"
+                                 required="true" placeholder="0000-0000-00000" />
+
+                    <p:outputLabel for="fecha" value="Fecha de Nacimiento:" />
+                    <p:calendar id="fecha" value="#{HospitalBean.pacienteActual.fechaNacimiento}"
+                                pattern="dd/MM/yyyy" mask="true" navigator="true"
+                                showOn="button" yearRange="c-100:c+10" />
+
+                    <p:outputLabel for="historial" value="Observaciones:" />
+                    <p:inputTextarea id="historial" value="#{HospitalBean.pacienteActual.historialClinico}"
+                                     rows="2" autoResize="true" placeholder="Notas clínicas relevantes..." />
+
+                </p:panelGrid>
+
+                <div style="margin: 25px 0; text-align: center;">
+                    <p:commandButton value="#{HospitalBean.textoBoton}"
+                                     actionListener="#{HospitalBean.guardar}"
+                                     update="formPrincipal:tablaPacientes, panelDatos, msjs"
+                                     icon="pi pi-save" styleClass="ui-button-success"
+                                     style="width: 220px; margin-right: 15px; padding: 5px;" />
+
+                    <p:commandButton value="Limpiar Formulario"
+                                     actionListener="#{HospitalBean.limpiarFormulario}"
+                                     update="panelDatos" process="@this"
+                                     icon="pi pi-refresh" styleClass="ui-button-outlined ui-button-secondary"
+                                     style="width: 220px; padding: 5px;" />
+                </div>
+
+                <p:separator style="margin: 30px 0;" />
+
+                <p:dataTable id="tablaPacientes" value="#{HospitalBean.listaPacientes}" var="pac"
+                             selectionMode="single" selection="#{HospitalBean.seleccionado}"
+                             rowKey="#{pac.id}" paginator="true" rows="8"
+                             paginatorPosition="bottom"
+                             emptyMessage="No hay registros disponibles">
+
+                    <f:facet name="header">
+                        <div style="padding: 5px;">
+                            <i class="pi pi-list" style="margin-right: 10px;"></i>
+                            Expedientes Activos
+                        </div>
+                    </f:facet>
+
+                    <p:ajax event="rowSelect" listener="#{HospitalBean.prepararEdicion}"
+                            update="formPrincipal:panelDatos" />
+
+                    <p:column headerText="ID" width="60" style="text-align: center;">
+                        <h:outputText value="#{pac.id}" style="font-weight: bold; color: #607D8B;"/>
+                    </p:column>
+
+                    <p:column headerText="Nombre del Paciente" filterBy="#{pac.nombre}" filterMatchMode="contains">
+                        <h:outputText value="#{pac.nombre}" />
+                    </p:column>
+
+                    <p:column headerText="Identidad" width="180">
+                        <h:outputText value="#{pac.identidad}" />
+                    </p:column>
+
+                    <p:column headerText="F. Nacimiento" width="150" style="text-align: center;">
+                        <h:outputText value="#{pac.fechaNacimiento}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Acción" width="70" style="text-align: center;">
+                        <p:commandButton icon="pi pi-trash"
+                                         styleClass="ui-button-danger ui-button-flat action-btn"
+                                         oncomplete="PF('dgEliminar').show()"
+                                         process="@this">
+                            <f:setPropertyActionListener value="#{pac}" target="#{HospitalBean.seleccionado}" />
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+        </h:form>
+
+        <h:form id="formDialogos">
+            <p:confirmDialog widgetVar="dgEliminar" showEffect="fade" hideEffect="fade" width="400"
+                             message="¿Desea archivar/eliminar permanentemente este registro de paciente?"
+                             header="Confirmar Acción" severity="warn">
+                <p:commandButton value="Eliminar" icon="pi pi-check"
+                                 actionListener="#{HospitalBean.eliminar}"
+                                 process="@this"
+                                 update="formPrincipal:tablaPacientes, msjs"
+                                 oncomplete="PF('dgEliminar').hide()"
+                                 styleClass="ui-button-danger" />
+                <p:commandButton value="Cancelar" type="button" styleClass="ui-button-secondary ui-button-flat"
+                                 icon="pi pi-times" onclick="PF('dgEliminar').hide()" />
+            </p:confirmDialog>
+        </h:form>
+    </div>
+</h:body>
+</html>

@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="jakarta.faces.core">
+<h:head>
+    <title>Hospital - Citas Médicas</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+</h:head>
+<h:body style="background-color: #f0f2f5;">
+
+    <div class="appointments-container">
+        <h:form id="formCitas">
+            <p:growl id="msjs" showDetail="true" />
+
+            <div class="calendar-header">
+                <div>
+                    <h2 style="margin:0; color: #4527a0;">
+                        <i class="pi pi-calendar-clock" style="margin-right: 10px;"></i>
+                        Control de Citas
+                    </h2>
+                </div>
+                <div>
+                    <p:button value="Inicio" icon="pi pi-home" outcome="inicio.xhtml"
+                              styleClass="ui-button-outlined ui-button-secondary" style="margin-right: 10px;"/>
+                    <p:commandButton value="Cerrar Sesión" icon="pi pi-sign-out"
+                                     action="#{LoginBean.salir()}"
+                                     styleClass="ui-button-danger ui-button-flat" />
+                </div>
+            </div>
+
+            <p:panel header="Programar Nueva Cita Médica" toggleable="true" styleClass="appointment-form" style="margin-bottom: 30px">
+                <p:panelGrid columns="4" layout="grid"
+                             columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
+                             styleClass="ui-panelgrid-blank ui-fluid">
+
+                    <p:outputLabel value="Paciente:" for="selPaciente" style="font-weight:bold" />
+                    <p:selectOneMenu id="selPaciente" value="#{citaBean.nuevaCita.paciente.id}" required="true">
+                        <f:selectItem itemLabel="-- Seleccionar Paciente --" itemValue="0" />
+                        <f:selectItems value="#{citaBean.listaPacientes}" var="p"
+                                       itemLabel="#{p.nombre}" itemValue="#{p.id}" />
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="Fecha de Cita:" for="fecha" style="font-weight:bold" />
+                    <p:calendar id="fecha" value="#{citaBean.nuevaCita.fechaCita}"
+                                pattern="dd/MM/yyyy" showOn="button" navigator="true" />
+
+                    <p:outputLabel value="Motivo/Síntomas:" for="sintomas" style="font-weight:bold" />
+                    <p:inputTextarea id="sintomas" value="#{citaBean.nuevaCita.sintomas}"
+                                     rows="2" placeholder="Describa brevemente el motivo..." />
+
+                    <p:outputLabel value="¿Urgencia Médica?" for="urgente" style="font-weight:bold; color: #d32f2f" />
+                    <h:panelGroup>
+                        <p:selectBooleanCheckbox id="urgente" value="#{citaBean.nuevaCita.urgente}" styleClass="urgent-checkbox" />
+                        <h:outputText value=" Marcar si requiere atención inmediata" style="font-size: 0.8rem; color: #666; margin-left: 10px" />
+                    </h:panelGroup>
+
+                </p:panelGrid>
+
+                <div style="text-align: right; padding: 15px 0;">
+                    <p:commandButton value="Agendar Cita" action="#{citaBean.guardar()}"
+                                     update="formCitas" icon="pi pi-check-circle"
+                                     styleClass="ui-button-success" style="width: 200px" />
+                </div>
+            </p:panel>
+
+            <p:dataTable id="tablaCitas" value="#{citaBean.listaCitas}" var="c"
+                         selectionMode="single" selection="#{citaBean.citaSeleccionada}" rowKey="#{c.idCita}"
+                         rows="10" paginator="true" paginatorPosition="bottom"
+                         emptyMessage="No hay citas registradas para este periodo">
+
+                <p:column headerText="Paciente" sortBy="#{c.paciente.nombre}">
+                    <h:outputText value="#{c.paciente.nombre}" style="font-weight: 500" />
+                </p:column>
+
+                <p:column headerText="Fecha" width="120" style="text-align: center">
+                    <i class="pi pi-calendar" style="margin-right: 5px; color: #78909c;"></i>
+                    <h:outputText value="#{c.fechaCita}">
+                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Motivo">
+                    <h:outputText value="#{c.sintomas}" style="font-style: italic; color: #546e7a;" />
+                </p:column>
+
+                <p:column headerText="Prioridad" width="130" style="text-align: center">
+                    <p:tag severity="#{c.urgente ? 'danger' : 'info'}"
+                           value="#{c.urgente ? 'ALTA PRIORIDAD' : 'NORMAL'}"
+                           rounded="true" icon="#{c.urgente ? 'pi pi-exclamation-triangle' : 'pi pi-clock'}" />
+                </p:column>
+
+                <p:column headerText="Estado" width="130" style="text-align: center">
+                    <span class="#{c.resuelta ? 'status-resolved' : 'status-pending'}">
+                        #{c.resuelta ? 'RESUELTA' : 'PENDIENTE'}
+                    </span>
+                </p:column>
+
+                <p:column headerText="Acción" width="80" style="text-align: center">
+                    <p:commandButton icon="pi pi-check-circle" title="Finalizar Cita"
+                                     action="#{citaBean.resolverCita()}" update="formCitas"
+                                     disabled="#{c.resuelta}"
+                                     styleClass="ui-button-rounded ui-button-success ui-button-text">
+                        <f:setPropertyActionListener value="#{c}" target="#{citaBean.citaSeleccionada}" />
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </div>
+</h:body>
+</html>

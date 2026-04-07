@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="jakarta.faces.core">
+<h:head>
+    <title>Hospital - Configuración</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+</h:head>
+<h:body style="background-color: #f8fafc;">
+
+    <div class="admin-container">
+        <h:form id="formUsuarios">
+            <p:growl id="msg" showDetail="true" />
+
+            <div class="admin-header">
+                <h2><i class="pi pi-shield" style="margin-right: 10px; color: #1976d2;"></i>Panel de Seguridad</h2>
+                <div>
+                    <p:button value="Inicio" icon="pi pi-home" outcome="inicio.xhtml"
+                              styleClass="ui-button-outlined ui-button-secondary" style="margin-right: 10px;"/>
+                    <p:commandButton value="Cerrar Sesión" icon="pi pi-sign-out"
+                                     action="#{LoginBean.salir()}"
+                                     styleClass="ui-button-danger ui-button-flat" />
+                </div>
+            </div>
+
+            <p:panel styleClass="user-form-card" style="margin-bottom: 30px;">
+                <h3><i class="pi pi-user-plus" style="margin-right: 10px;"></i>Nuevo Acceso</h3>
+                <p:separator style="margin-bottom: 20px;"/>
+
+                <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank ui-fluid"
+                             columnClasses="ui-grid-col-4, ui-grid-col-5, ui-grid-col-3">
+
+                    <h:panelGroup>
+                        <p:outputLabel value="Usuario de Sistema:" for="user" style="font-weight:bold;"/>
+                        <p:inputText id="user" value="#{usuarioBean.nuevoUsuario.username}"
+                                     required="true" placeholder="nombre.apellido" />
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <p:outputLabel value="Contraseña Segura:" for="pass" style="font-weight:bold;"/>
+                        <p:password id="pass" value="#{usuarioBean.nuevoUsuario.password}"
+                                    required="true" feedback="true" toggleMask="true"
+                                    promptLabel="Nivel de seguridad" weakLabel="Insegura"
+                                    goodLabel="Aceptable" strongLabel="Fuerte" />
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <p:spacer height="19" style="display:block"/>
+                        <p:commandButton value="Dar de Alta" action="#{usuarioBean.guardar()}"
+                                         update="formUsuarios" icon="pi pi-check-circle"
+                                         styleClass="ui-button-primary" />
+                    </h:panelGroup>
+                </p:panelGrid>
+            </p:panel>
+
+            <p:dataTable id="tablaUsers" value="#{usuarioBean.listaUsuarios}" var="u"
+                         emptyMessage="No hay usuarios adicionales registrados"
+                         styleClass="users-table shadow-1"
+                         rows="5" paginator="true" paginatorPosition="bottom">
+
+                <f:facet name="header">
+                    Gestión de Cuentas de Usuario
+                </f:facet>
+
+                <p:column headerText="ID" width="60" style="text-align: center">
+                    <span class="id-badge">#{u.id}</span>
+                </p:column>
+
+                <p:column headerText="Nombre de Usuario">
+                    <i class="pi pi-user" style="margin-right: 8px; color: #90a4ae;"></i>
+                    <h:outputText value="#{u.username}" style="font-weight: 500; color: #263238;" />
+                </p:column>
+
+                <p:column headerText="Estatus" width="150" style="text-align: center">
+                    <p:tag severity="success" value="ACTIVO" rounded="true" icon="pi pi-check" />
+                </p:column>
+
+                <p:column headerText="Acciones" width="100" style="text-align: center">
+                    <p:commandButton icon="pi pi-trash"
+                                     action="#{usuarioBean.eliminar()}" update="formUsuarios"
+                                     styleClass="ui-button-danger ui-button-text">
+                        <f:setPropertyActionListener value="#{u}" target="#{usuarioBean.usuarioSeleccionado}" />
+                        <p:confirm header="Confirmar Baja" message="¿Desea revocar el acceso a #{u.username}?" icon="pi pi-exclamation-triangle" />
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
+                <p:commandButton value="Cancelar" type="button" styleClass="ui-confirmdialog-no ui-button-secondary ui-button-flat"/>
+                <p:commandButton value="Confirmar" type="button" styleClass="ui-confirmdialog-yes ui-button-danger" />
+            </p:confirmDialog>
+
+        </h:form>
+    </div>
+</h:body>
+</html>
