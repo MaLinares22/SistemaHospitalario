@@ -33,19 +33,18 @@ public class CitaBean implements Serializable {
 
     public void listarTodo() {
         this.listaCitas = conexion.consultarCitas();
-        this.listaPacientes = conexion.consultarPacientes(); // Necesitamos los pacientes para el formulario
+        this.listaPacientes = conexion.consultarPacientes();
     }
 
     public void guardar() {
         try {
-            // Verificamos que se haya seleccionado un paciente
             if (nuevaCita.getPaciente().getId() == 0) {
                 throw new Exception("Debe seleccionar un paciente");
             }
 
             conexion.crearCita(nuevaCita);
             listarTodo();
-            nuevaCita = new Cita(); // Reset del formulario
+            nuevaCita = new Cita();
 
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Cita programada correctamente"));
