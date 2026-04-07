@@ -124,6 +124,11 @@
     min-height: 100vh;
 }
 
+.edit-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
 /* Espaciado del Menubar */
 .ui-menubar {
     margin-bottom: 20px !important;
@@ -131,6 +136,22 @@
     padding: 5px 20px !important;
     background-color: #ffffff !important;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05) !important;
+}
+
+.logout-btn {
+    background-color: #d32f2f !important;
+    border: 1px solid #c62828 !important;
+    color: #ffffff !important;
+}
+
+.logout-btn .pi {
+    color: #ffffff !important;
+}
+
+.logout-btn:hover,
+.logout-btn:focus {
+    background-color: #b71c1c !important;
+    border-color: #b71c1c !important;
 }
 
 /* Panel de Formulario */

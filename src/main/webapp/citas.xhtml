@@ -13,24 +13,25 @@
     <div class="appointments-container">
         <h:form id="formCitas">
             <p:growl id="msjs" showDetail="true" />
+            <h:form id="menuForm">
+                <p:menubar styleClass="ui-menubar">
+                    <p:menuitem value="Inicio" icon="pi pi-home" url="inicio.xhtml" />
+                    <p:submenu label="Expedientes" icon="pi pi-folder-open">
+                        <p:menuitem value="Pacientes" icon="pi pi-users" url="editar.xhtml" />
+                        <p:menuitem value="Citas Médicas" icon="pi pi-calendar-plus" url="citas.xhtml" />
+                    </p:submenu>
+                    <p:submenu label="Configuración" icon="pi pi-cog">
+                        <p:menuitem value="Usuarios" icon="pi pi-user-edit" url="configuracion.xhtml" />
+                    </p:submenu>
+                    <f:facet name="options">
+                        <p:commandButton value="Cerrar Sesión" icon="pi pi-sign-out"
+                                         styleClass="ui-button-flat ui-button-plain logout-btn" action="#{LoginBean.salir()}" />
+                    </f:facet>
+                </p:menubar>
+            </h:form>
 
-            <div class="calendar-header">
-                <div>
-                    <h2 style="margin:0; color: #4527a0;">
-                        <i class="pi pi-calendar-clock" style="margin-right: 10px;"></i>
-                        Control de Citas
-                    </h2>
-                </div>
-                <div>
-                    <p:button value="Inicio" icon="pi pi-home" outcome="inicio.xhtml"
-                              styleClass="ui-button-outlined ui-button-secondary" style="margin-right: 10px;"/>
-                    <p:commandButton value="Cerrar Sesión" icon="pi pi-sign-out"
-                                     action="#{LoginBean.salir()}"
-                                     styleClass="ui-button-danger ui-button-flat" />
-                </div>
-            </div>
 
-            <p:panel header="Programar Nueva Cita Médica" toggleable="true" styleClass="appointment-form" style="margin-bottom: 30px">
+            <p:panel header="Registro de Citas" toggleable="true" styleClass="appointment-form" style="margin-bottom: 30px">
                 <p:panelGrid columns="4" layout="grid"
                              columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
                              styleClass="ui-panelgrid-blank ui-fluid">

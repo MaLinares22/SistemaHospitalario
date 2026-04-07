@@ -12,21 +12,26 @@
 
     <div class="admin-container">
         <h:form id="formUsuarios">
-            <p:growl id="msg" showDetail="true" />
-
-            <div class="admin-header">
-                <h2><i class="pi pi-shield" style="margin-right: 10px; color: #1976d2;"></i>Panel de Seguridad</h2>
-                <div>
-                    <p:button value="Inicio" icon="pi pi-home" outcome="inicio.xhtml"
-                              styleClass="ui-button-outlined ui-button-secondary" style="margin-right: 10px;"/>
-                    <p:commandButton value="Cerrar Sesión" icon="pi pi-sign-out"
-                                     action="#{LoginBean.salir()}"
-                                     styleClass="ui-button-danger ui-button-flat" />
-                </div>
-            </div>
+            <p:growl id="msjs" showDetail="true" />
+            <h:form id="menuForm">
+                <p:menubar styleClass="ui-menubar">
+                    <p:menuitem value="Inicio" icon="pi pi-home" url="inicio.xhtml" />
+                    <p:submenu label="Expedientes" icon="pi pi-folder-open">
+                        <p:menuitem value="Pacientes" icon="pi pi-users" url="editar.xhtml" />
+                        <p:menuitem value="Citas Médicas" icon="pi pi-calendar-plus" url="citas.xhtml" />
+                    </p:submenu>
+                    <p:submenu label="Configuración" icon="pi pi-cog">
+                        <p:menuitem value="Usuarios" icon="pi pi-user-edit" url="configuracion.xhtml" />
+                    </p:submenu>
+                    <f:facet name="options">
+                        <p:commandButton value="Cerrar Sesión" icon="pi pi-sign-out"
+                                         styleClass="ui-button-flat ui-button-plain logout-btn" action="#{LoginBean.salir()}" />
+                    </f:facet>
+                </p:menubar>
+            </h:form>
 
             <p:panel styleClass="user-form-card" style="margin-bottom: 30px;">
-                <h3><i class="pi pi-user-plus" style="margin-right: 10px;"></i>Nuevo Acceso</h3>
+                <h3><i class="pi pi-user-plus" style="margin-right: 10px;"></i>Registro De Usuarios</h3>
                 <p:separator style="margin-bottom: 20px;"/>
 
                 <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank ui-fluid"
@@ -48,7 +53,7 @@
 
                     <h:panelGroup>
                         <p:spacer height="19" style="display:block"/>
-                        <p:commandButton value="Dar de Alta" action="#{usuarioBean.guardar()}"
+                        <p:commandButton value="Registrar" action="#{usuarioBean.guardar()}"
                                          update="formUsuarios" icon="pi pi-check-circle"
                                          styleClass="ui-button-primary" />
                     </h:panelGroup>
@@ -61,7 +66,7 @@
                          rows="5" paginator="true" paginatorPosition="bottom">
 
                 <f:facet name="header">
-                    Gestión de Cuentas de Usuario
+                    Usuarios Registrados
                 </f:facet>
 
                 <p:column headerText="ID" width="60" style="text-align: center">

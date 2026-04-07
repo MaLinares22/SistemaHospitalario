@@ -10,15 +10,29 @@
 </h:head>
 <h:body style="background-color: #f4f7f6;">
 
-    <h:form id="headerForm">
-        <div style="text-align: right; padding: 15px;">
-            <p:commandButton value="Cerrar Sesión" icon="pi pi-sign-out"
-                             action="#{LoginBean.salir}"
-                             styleClass="ui-button-danger ui-button-flat" />
-        </div>
-    </h:form>
+    <div class="admin-container" style="padding-bottom: 10px;">
+        <h:form id="formUsuarios">
+            <p:growl id="msjs" showDetail="true" />
+            <h:form id="menuForm">
+                <p:menubar styleClass="ui-menubar">
+                    <p:menuitem value="Inicio" icon="pi pi-home" url="inicio.xhtml" />
+                    <p:submenu label="Expedientes" icon="pi pi-folder-open">
+                        <p:menuitem value="Pacientes" icon="pi pi-users" url="editar.xhtml" />
+                        <p:menuitem value="Citas Médicas" icon="pi pi-calendar-plus" url="citas.xhtml" />
+                    </p:submenu>
+                    <p:submenu label="Configuración" icon="pi pi-cog">
+                        <p:menuitem value="Usuarios" icon="pi pi-user-edit" url="configuracion.xhtml" />
+                    </p:submenu>
+                    <f:facet name="options">
+                        <p:commandButton value="Cerrar Sesión" icon="pi pi-sign-out"
+                                         styleClass="ui-button-flat ui-button-plain logout-btn" action="#{LoginBean.salir()}" />
+                    </f:facet>
+                </p:menubar>
+            </h:form>
+        </h:form>
+    </div>
 
-    <div class="dashboard-container">
+    <div class="dashboard-container" style="padding-top: 10px;">
         <h1 class="main-title">SISTEMA DE GESTIÓN HOSPITALARIA</h1>
 
         <p:panel styleClass="info-card">
@@ -54,6 +68,10 @@
                 <div class="team-item">
                     <span class="team-name">Nathaly Melissa Aguilar Gomez</span>
                     <span class="team-id">Cuenta: 202210110121</span>
+                </div>
+                <div class="team-item">
+                    <span class="team-name">Gabriela Maria Franco</span>
+                    <span class="team-id">Cuenta: 201810110007</span>
                 </div>
             </div>
         </p:panel>

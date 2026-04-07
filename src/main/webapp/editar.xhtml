@@ -11,7 +11,7 @@
 </h:head>
 
 <h:body>
-    <div class="main-content">
+    <div class="main-content edit-container">
         <p:growl id="msjs" showDetail="true" />
 
         <h:form id="menuForm">
@@ -26,7 +26,7 @@
                 </p:submenu>
                 <f:facet name="options">
                     <p:commandButton value="Cerrar Sesión" icon="pi pi-sign-out"
-                                     styleClass="ui-button-flat ui-button-plain" action="#{LoginBean.salir()}" />
+                                     styleClass="ui-button-flat ui-button-plain logout-btn" action="#{LoginBean.salir()}" />
                 </f:facet>
             </p:menubar>
         </h:form>
