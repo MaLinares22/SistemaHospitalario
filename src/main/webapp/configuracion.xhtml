@@ -13,27 +13,25 @@
     <div class="admin-container">
         <h:form id="formUsuarios">
             <p:growl id="msjs" showDetail="true" />
-            <h:form id="menuForm">
-                <p:menubar styleClass="ui-menubar">
-                    <p:menuitem value="Inicio" icon="pi pi-home" url="inicio.xhtml" />
-                    <p:submenu label="Expedientes" icon="pi pi-folder-open">
-                        <p:menuitem value="Pacientes" icon="pi pi-users" url="editar.xhtml" />
-                        <p:menuitem value="Citas Médicas" icon="pi pi-calendar-plus" url="citas.xhtml" />
-                    </p:submenu>
-                    <p:submenu label="Configuración" icon="pi pi-cog">
-                        <p:menuitem value="Usuarios" icon="pi pi-user-edit" url="configuracion.xhtml" />
-                    </p:submenu>
-                    <f:facet name="options">
-                        <p:commandButton value="Cerrar Sesión" icon="pi pi-sign-out"
-                                         styleClass="ui-button-flat ui-button-plain logout-btn" action="#{LoginBean.salir()}" />
-                    </f:facet>
-                </p:menubar>
-            </h:form>
 
-            <p:panel styleClass="user-form-card" style="margin-bottom: 30px;">
-                <h3><i class="pi pi-user-plus" style="margin-right: 10px;"></i>Registro De Usuarios</h3>
-                <p:separator style="margin-bottom: 20px;"/>
+            <p:menubar styleClass="ui-menubar custom-navbar">
 
+                <p:menuitem value="Inicio" icon="pi pi-home" url="inicio.xhtml" />
+                <p:submenu label="Expedientes" icon="pi pi-folder-open">
+                    <p:menuitem value="Pacientes" icon="pi pi-users" url="editar.xhtml" />
+                    <p:menuitem value="Citas Médicas" icon="pi pi-calendar-plus" url="citas.xhtml" />
+                </p:submenu>
+                <p:submenu label="Configuración" icon="pi pi-cog">
+                    <p:menuitem value="Usuarios" icon="pi pi-user-edit" url="configuracion.xhtml" />
+                </p:submenu>
+
+                <f:facet name="options">
+                    <p:commandButton value="Cerrar Sesión" icon="pi pi-sign-out"
+                                     styleClass="ui-button-flat ui-button-plain logout-btn" action="#{LoginBean.salir()}" />
+                </f:facet>
+            </p:menubar>
+
+            <p:panel header="Registro de Nuevos Usuarios" toggleable="true" styleClass="user-form-card" style="margin-bottom: 30px; margin-top: 20px;">
                 <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank ui-fluid"
                              columnClasses="ui-grid-col-4, ui-grid-col-5, ui-grid-col-3">
 
@@ -53,8 +51,8 @@
 
                     <h:panelGroup>
                         <p:spacer height="19" style="display:block"/>
-                        <p:commandButton value="Registrar" action="#{usuarioBean.guardar()}"
-                                         update="formUsuarios" icon="pi pi-check-circle"
+                        <p:commandButton value="Registrar Usuario" action="#{usuarioBean.guardar()}"
+                                         update="formUsuarios" icon="pi pi-user-plus"
                                          styleClass="ui-button-primary" />
                     </h:panelGroup>
                 </p:panelGrid>
@@ -66,14 +64,17 @@
                          rows="5" paginator="true" paginatorPosition="bottom">
 
                 <f:facet name="header">
-                    Usuarios Registrados
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span><i class="pi pi-users" style="margin-right: 10px;"></i>Cuentas de Usuario Activas</span>
+                        <p:tag severity="warning" value="Acceso Restringido" rounded="true" />
+                    </div>
                 </f:facet>
 
-                <p:column headerText="ID" width="60" style="text-align: center">
+                <p:column headerText="ID" width="60" style="text-align: center" sortBy="#{u.id}">
                     <span class="id-badge">#{u.id}</span>
                 </p:column>
 
-                <p:column headerText="Nombre de Usuario">
+                <p:column headerText="Nombre de Usuario" sortBy="#{u.username}" filterBy="#{u.username}" filterMatchMode="contains">
                     <i class="pi pi-user" style="margin-right: 8px; color: #90a4ae;"></i>
                     <h:outputText value="#{u.username}" style="font-weight: 500; color: #263238;" />
                 </p:column>
