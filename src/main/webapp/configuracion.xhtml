@@ -11,26 +11,27 @@
 <h:body style="background-color: #f8fafc;">
 
     <div class="admin-container">
-        <h:form id="formUsuarios">
-            <p:growl id="msjs" showDetail="true" />
 
+        <h:form id="menuForm">
             <p:menubar styleClass="ui-menubar custom-navbar">
-
                 <p:menuitem value="Inicio" icon="pi pi-home" url="inicio.xhtml" />
                 <p:submenu label="Expedientes" icon="pi pi-folder-open">
                     <p:menuitem value="Pacientes" icon="pi pi-users" url="editar.xhtml" />
                     <p:menuitem value="Citas Médicas" icon="pi pi-calendar-plus" url="citas.xhtml" />
-                    <p:menuitem value="Recetas" icon="pi pi-money-bill" url="recetas.xhtml" />
+                    <p:menuitem value="Recetas" icon="pi pi-money-bill" url="facturacion.xhtml" />
                 </p:submenu>
                 <p:submenu label="Configuración" icon="pi pi-cog">
                     <p:menuitem value="Usuarios" icon="pi pi-user-edit" url="configuracion.xhtml" />
                 </p:submenu>
-
                 <f:facet name="options">
                     <p:commandButton value="Cerrar Sesión" icon="pi pi-sign-out"
                                      styleClass="ui-button-flat ui-button-plain logout-btn" action="#{LoginBean.salir()}" />
                 </f:facet>
             </p:menubar>
+        </h:form>
+
+        <h:form id="formUsuarios">
+            <p:growl id="msjs" showDetail="true" />
 
             <p:panel header="Registro de Nuevos Usuarios" toggleable="true" styleClass="user-form-card" style="margin-bottom: 30px; margin-top: 20px;">
                 <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank ui-fluid"
@@ -86,7 +87,9 @@
 
                 <p:column headerText="Acciones" width="100" style="text-align: center">
                     <p:commandButton icon="pi pi-trash"
-                                     action="#{usuarioBean.eliminar()}" update="formUsuarios"
+                                     action="#{usuarioBean.eliminar()}"
+                                     update="formUsuarios"
+                                     process="@this"
                                      styleClass="ui-button-danger ui-button-text">
                         <f:setPropertyActionListener value="#{u}" target="#{usuarioBean.usuarioSeleccionado}" />
                         <p:confirm header="Confirmar Baja" message="¿Desea revocar el acceso a #{u.username}?" icon="pi pi-exclamation-triangle" />

@@ -11,42 +11,44 @@
 <h:body style="background-color: #f0f2f5;">
 
     <div class="appointments-container">
+
+        <h:form id="menuForm">
+            <p:menubar styleClass="ui-menubar">
+                <p:menuitem value="Inicio" icon="pi pi-home" url="inicio.xhtml" />
+                <p:submenu label="Expedientes" icon="pi pi-folder-open">
+                    <p:menuitem value="Pacientes" icon="pi pi-users" url="editar.xhtml" />
+                    <p:menuitem value="Citas Médicas" icon="pi pi-calendar-plus" url="citas.xhtml" />
+                    <p:menuitem value="Recetas" icon="pi pi-money-bill" url="facturacion.xhtml" />
+                </p:submenu>
+                <p:submenu label="Configuración" icon="pi pi-cog">
+                    <p:menuitem value="Usuarios" icon="pi pi-user-edit" url="configuracion.xhtml" />
+                </p:submenu>
+                <f:facet name="options">
+                    <p:commandButton value="Cerrar Sesión" icon="pi pi-sign-out"
+                                     styleClass="ui-button-flat ui-button-plain logout-btn" action="#{LoginBean.salir()}" />
+                </f:facet>
+            </p:menubar>
+        </h:form>
+
         <h:form id="formCitas">
             <p:growl id="msjs" showDetail="true" />
-            <h:form id="menuForm">
-                <p:menubar styleClass="ui-menubar">
-                    <p:menuitem value="Inicio" icon="pi pi-home" url="inicio.xhtml" />
-                    <p:submenu label="Expedientes" icon="pi pi-folder-open">
-                        <p:menuitem value="Pacientes" icon="pi pi-users" url="editar.xhtml" />
-                        <p:menuitem value="Citas Médicas" icon="pi pi-calendar-plus" url="citas.xhtml" />
-                        <p:menuitem value="Recetas" icon="pi pi-money-bill" url="recetas.xhtml" />
-                    </p:submenu>
-                    <p:submenu label="Configuración" icon="pi pi-cog">
-                        <p:menuitem value="Usuarios" icon="pi pi-user-edit" url="configuracion.xhtml" />
-                    </p:submenu>
-                    <f:facet name="options">
-                        <p:commandButton value="Cerrar Sesión" icon="pi pi-sign-out"
-                                         styleClass="ui-button-flat ui-button-plain logout-btn" action="#{LoginBean.salir()}" />
-                    </f:facet>
-                </p:menubar>
-            </h:form>
 
-
-            <p:panel header="Registro de Citas" toggleable="true" styleClass="appointment-form" style="margin-bottom: 30px">
-                <p:panelGrid columns="4" layout="grid"
+            <p:panel header="Registro de Citas" toggleable="true" styleClass="appointment-form" style="margin-bottom: 30px; margin-top: 15px;">
+                <p:panelGrid id="panelRegistro" columns="4" layout="grid"
                              columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
                              styleClass="ui-panelgrid-blank ui-fluid">
 
                     <p:outputLabel value="Paciente:" for="selPaciente" style="font-weight:bold" />
-                    <p:selectOneMenu id="selPaciente" value="#{citaBean.nuevaCita.paciente.id}" required="true">
-                        <f:selectItem itemLabel="-- Seleccionar Paciente --" itemValue="0" />
+                    <p:selectOneMenu id="selPaciente" value="#{citaBean.nuevaCita.paciente.id}"
+                                     required="true" requiredMessage="Debe seleccionar un paciente">
+                        <f:selectItem itemLabel="-- Seleccionar Paciente --" itemValue="#{null}" noSelectionOption="true" />
                         <f:selectItems value="#{citaBean.listaPacientes}" var="p"
                                        itemLabel="#{p.nombre}" itemValue="#{p.id}" />
                     </p:selectOneMenu>
 
                     <p:outputLabel value="Fecha de Cita:" for="fecha" style="font-weight:bold" />
                     <p:calendar id="fecha" value="#{citaBean.nuevaCita.fechaCita}"
-                                pattern="dd/MM/yyyy" showOn="button" navigator="true" />
+                                pattern="dd/MM/yyyy" showOn="button" navigator="true" required="true" />
 
                     <p:outputLabel value="Motivo/Síntomas:" for="sintomas" style="font-weight:bold" />
                     <p:inputTextarea id="sintomas" value="#{citaBean.nuevaCita.sintomas}"
@@ -62,7 +64,7 @@
 
                 <div style="text-align: right; padding: 15px 0;">
                     <p:commandButton value="Agendar Cita" action="#{citaBean.guardar()}"
-                                     update="formCitas" icon="pi pi-check-circle"
+                                     update="formCitas, msjs" icon="pi pi-check-circle"
                                      styleClass="ui-button-success" style="width: 200px" />
                 </div>
             </p:panel>
@@ -71,6 +73,13 @@
                          selectionMode="single" selection="#{citaBean.citaSeleccionada}" rowKey="#{c.idCita}"
                          rows="10" paginator="true" paginatorPosition="bottom"
                          emptyMessage="No hay citas registradas para este periodo">
+
+                <f:facet name="header">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>Listado de Citas Agendadas</span>
+                        <p:commandButton icon="pi pi-refresh" update="tablaCitas" styleClass="ui-button-flat ui-button-plain"/>
+                    </div>
+                </f:facet>
 
                 <p:column headerText="Paciente" sortBy="#{c.paciente.nombre}">
                     <h:outputText value="#{c.paciente.nombre}" style="font-weight: 500" />
@@ -94,9 +103,8 @@
                 </p:column>
 
                 <p:column headerText="Estado" width="130" style="text-align: center">
-                    <span class="#{c.resuelta ? 'status-resolved' : 'status-pending'}">
-                        #{c.resuelta ? 'RESUELTA' : 'PENDIENTE'}
-                    </span>
+                    <p:tag severity="#{c.resuelta ? 'success' : 'warning'}"
+                           value="#{c.resuelta ? 'RESUELTA' : 'PENDIENTE'}" />
                 </p:column>
 
                 <p:column headerText="Acción" width="80" style="text-align: center">
