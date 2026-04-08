@@ -288,4 +288,79 @@ public class ConexionBD {
             System.err.println("Error al eliminar cita: " + e.getMessage());
         }
     }
+
+    // Agrega esto al final de tu clase ConexionBD.java
+
+    public void crearRecetas(int idCita, List<data.Medicamento> listaMedicamentos) {
+        try {
+            // SQL para insertar los medicamentos vinculados a la cita
+            String sql = "INSERT INTO Recetas (id_cita, nombre_medicamento, precio, cantidad) VALUES (?, ?, ?, ?)";
+
+            // Usamos tu método conectar
+            PreparedStatement operacion = conectar(sql);
+
+            if (operacion != null) {
+                for (data.Medicamento m : listaMedicamentos) {
+                    operacion.setInt(1, idCita);
+                    operacion.setString(2, m.getNombre());
+                    operacion.setDouble(3, m.getPrecio());
+                    operacion.setInt(4, m.getCantidad());
+                    operacion.executeUpdate();
+                }
+
+                // Cerramos conexión como haces en tus otros métodos
+                if (this.conexion != null && !this.conexion.isClosed()) {
+                    this.conexion.close();
+                }
+                System.out.println("¡Receta guardada exitosamente!");
+            }
+        } catch (Exception error) {
+            System.err.println("Error al insertar receta: " + error.getMessage());
+        }
+    }
+
+    public List<Cita> consultarCitasPendientes() {
+        List<Cita> lista = new ArrayList<>();
+        try {
+            // Traemos el ID de cita y el Nombre del paciente mediante un JOIN
+            String sql = "SELECT c.id_cita, p.nombre FROM citas c " +
+                    "INNER JOIN pacientes p ON c.id_paciente = p.id " +
+                    "WHERE c.resuelta = false";
+
+            PreparedStatement operacion = conectar(sql);
+            ResultSet rs = operacion.executeQuery();
+            while (rs.next()) {
+                Cita c = new Cita();
+                c.setIdCita(rs.getInt("id_cita"));
+                c.getPaciente().setNombre(rs.getString("nombre"));
+                lista.add(c);
+            }
+            conexion.close();
+        } catch (Exception e) {
+            System.err.println("Error al consultar citas pendientes: " + e.getMessage());
+        }
+        return lista;
+    }
+
+    public List<data.Medicamento> consultarMedicamentosPorCita(int idCita) {
+        List<data.Medicamento> lista = new ArrayList<>();
+        try {
+            String sql = "SELECT nombre_medicamento, precio, cantidad FROM Recetas WHERE id_cita = ?";
+            PreparedStatement operacion = conectar(sql);
+            operacion.setInt(1, idCita);
+            ResultSet rs = operacion.executeQuery();
+            while (rs.next()) {
+                data.Medicamento m = new data.Medicamento();
+                m.setNombre(rs.getString("nombre_medicamento"));
+                m.setPrecio(rs.getDouble("precio"));
+                m.setCantidad(rs.getInt("cantidad"));
+                lista.add(m);
+            }
+            conexion.close();
+        } catch (Exception e) {
+            System.err.println("Error al consultar receta: " + e.getMessage());
+        }
+        return lista;
+    }
 }
+

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Hospital - Facturación</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+</h:head>
+
+<h:body style="background-color: #f0f4f8;">
+    <div class="main-content">
+        <p:growl id="msjs" showDetail="true" />
+
+        <h:form id="menuForm" styleClass="no-print">
+            <p:menubar styleClass="ui-menubar custom-navbar">
+
+                <p:menuitem value="Inicio" icon="pi pi-home" url="inicio.xhtml" />
+                <p:submenu label="Expedientes" icon="pi pi-folder-open">
+                    <p:menuitem value="Pacientes" icon="pi pi-users" url="editar.xhtml" />
+                    <p:menuitem value="Citas Médicas" icon="pi pi-calendar-plus" url="citas.xhtml" />
+                    <p:menuitem value="Recetas" icon="pi pi-money-bill" url="facturacion.xhtml" />
+                </p:submenu>
+                <p:submenu label="Configuración" icon="pi pi-cog">
+                    <p:menuitem value="Usuarios" icon="pi pi-user-edit" url="configuracion.xhtml" />
+                </p:submenu>
+
+                <f:facet name="options">
+                    <p:commandButton value="Cerrar Sesión" icon="pi pi-sign-out"
+                                     styleClass="ui-button-flat ui-button-plain logout-btn" action="#{LoginBean.salir()}" />
+                </f:facet>
+            </p:menubar>
+        </h:form>
+
+        <h:form id="formFactura">
+
+            <div class="factura-header" style="padding: 20px; border-bottom: 2px solid #333; margin-bottom: 20px;">
+                <h:panelGrid columns="2" style="width: 100%;">
+                    <h:panelGroup>
+                        <h:outputText value="COMPROBANTE DE FARMACIA" style="font-size: 1.8rem; font-weight: 900; color: #2e7d32;"/><br/>
+                        <h:outputText value="Paciente: " style="font-weight: bold;"/>
+                        <h:outputText value="#{recetaBean.nombrePaciente}" style="font-size: 1.2rem;"/>
+                    </h:panelGroup>
+                    <h:panelGroup style="text-align: right;">
+                        <h:outputText value="Cita Médica: ##{recetaBean.idCitaSeleccionada}" style="font-weight: bold;"/><br/>
+                        <h:outputText value="Fecha de Emisión: "/>
+                        <h:outputText value="#{recetaBean.fechaImpresion}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                        </h:outputText>
+                    </h:panelGroup>
+                </h:panelGrid>
+            </div>
+
+            <p:panel header="Gestión de Medicamentos" styleClass="form-panel no-print" style="margin-bottom: 20px">
+                <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank ui-fluid">
+
+                    <h:panelGroup>
+                        <p:outputLabel value="Seleccionar Cita / Paciente:" for="selCita" style="font-weight:bold"/>
+                        <div class="ui-inputgroup">
+                            <p:selectOneMenu id="selCita" value="#{recetaBean.idCitaSeleccionada}"
+                                             filter="true" filterMatchMode="contains">
+                                <f:selectItem itemLabel="-- Buscar Paciente --" itemValue="" noSelectionOption="true"/>
+                                <f:selectItems value="#{recetaBean.listaCitas}" var="c"
+                                               itemLabel="#{c.paciente.nombre}" itemValue="#{c.idCita}" />
+                            </p:selectOneMenu>
+                            <p:commandButton icon="pi pi-search" action="#{recetaBean.buscarRecetaPorCita}"
+                                             update="tablaMed, totalPanel, msjs, formFactura"
+                                             title="Cargar medicamentos de esta cita" styleClass="ui-button-warning"/>
+                        </div>
+                    </h:panelGroup>
+
+                    <h:panelGrid columns="2" style="width: 100%">
+                        <h:panelGroup>
+                            <p:outputLabel value="Medicamento:" for="med" style="font-weight:bold"/>
+                            <p:inputText id="med" value="#{recetaBean.nuevoMed.nombre}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel value="Precio Unit:" for="precio" style="font-weight:bold"/>
+                            <p:inputNumber id="precio" value="#{recetaBean.nuevoMed.precio}" symbol="Lps. " />
+                        </h:panelGroup>
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="2" style="width: 100%">
+                        <h:panelGroup>
+                            <p:outputLabel value="Cantidad:" for="cant" style="font-weight:bold"/>
+                            <p:inputNumber id="cant" value="#{recetaBean.nuevoMed.cantidad}"
+                                           decimalPlaces="0"
+                                           minValue="1"
+                                           maxValue="100"
+                                           placeholder="1"
+                                           inputStyle="text-align: center; height: 32px;"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:spacer height="20" style="display:block"/>
+                            <p:commandButton value="Añadir" action="#{recetaBean.agregarMedicamento}"
+                                             update="tablaMed, totalPanel, msjs" icon="pi pi-plus" />
+                        </h:panelGroup>
+                    </h:panelGrid>
+
+                </p:panelGrid>
+            </p:panel>
+
+            <p:dataTable id="tablaMed" value="#{recetaBean.listaTemporal}" var="m"
+                         emptyMessage="No hay medicamentos cargados.">
+
+                <p:column headerText="Descripción del Medicamento">
+                    <h:outputText value="#{m.nombre}" />
+                </p:column>
+
+                <p:column headerText="Precio Unit." style="text-align: right; width: 150px;">
+                    <h:outputText value="#{m.precio}">
+                        <f:convertNumber type="currency" currencySymbol="$" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Cant." width="80" style="text-align: center;">
+                    <h:outputText value="#{m.cantidad}" />
+                </p:column>
+
+                <p:column headerText="Subtotal" style="text-align: right; font-weight: bold; width: 150px;">
+                    <h:outputText value="#{m.subtotal}">
+                        <f:convertNumber type="currency" currencySymbol="$" />
+                    </h:outputText>
+                </p:column>
+            </p:dataTable>
+
+            <h:panelGroup id="totalPanel" layout="block" styleClass="total-panel"
+                          style="text-align: right; margin-top: 25px; padding: 20px; background: #fff; border-radius: 10px; border: 1px solid #ddd;">
+
+                <h:panelGrid columns="2" style="float: right;">
+                    <h:outputText value="TOTAL: " style="font-size: 1.4rem; color: #555; font-weight: bold;"/>
+                    <h:outputText value="#{recetaBean.totalGeneral}" style="font-size: 2.5rem; font-weight: 900; color: #2e7d32; margin-left: 20px;">
+                        <f:convertNumber type="currency" currencySymbol="$" />
+                    </h:outputText>
+                </h:panelGrid>
+
+                <div style="clear: both; padding-top: 25px;" class="no-print">
+                    <p:separator />
+                    <p:commandButton value="Guardar Cambios"
+                                     action="#{recetaBean.guardarFacturaYReceta}"
+                                     icon="pi pi-save" styleClass="ui-button-success"
+                                     style="width: 250px; height: 50px; margin-right: 10px;"
+                                     update="msjs" />
+
+                    <p:commandButton value="Imprimir Historial"
+                                     type="button"
+                                     onclick="window.print();"
+                                     icon="pi pi-print" styleClass="ui-button-secondary"
+                                     style="width: 250px; height: 50px;" />
+                </div>
+            </h:panelGroup>
+        </h:form>
+    </div>
+</h:body>
+</html>

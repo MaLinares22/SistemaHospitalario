@@ -308,3 +308,35 @@
     transform: scale(1.2);
     margin-left: 10px;
 }
+
+@media print {
+    /* Oculta formularios, botones y menús */
+    .no-print,
+    .ui-button,
+    .ui-panel,
+    .ui-menubar,
+    .ui-growl,
+    .ui-separator,
+    form[id*="menuForm"] {
+        display: none !important;
+    }
+
+    /* Quita sombras y fondos grises para que parezca papel real */
+    .main-content {
+        background: white !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .ui-datatable, .ui-datatable-tablewrapper {
+        border: none !important;
+    }
+
+    /* Asegura que el total se vea alineado a la derecha en el papel */
+    .total-panel {
+        border: none !important;
+        background: transparent !important;
+        float: right !important;
+        width: 100% !important;
+    }
+}
