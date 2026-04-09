@@ -11,25 +11,25 @@
 <h:body style="background-color: #f4f7f6;">
 
     <div class="admin-container" style="padding-bottom: 10px;">
-        <h:form id="formUsuarios">
+        <h:form id="menuForm">
             <p:growl id="msjs" showDetail="true" />
-            <h:form id="menuForm">
-                <p:menubar styleClass="ui-menubar">
-                    <p:menuitem value="Inicio" icon="pi pi-home" url="inicio.xhtml" />
-                    <p:submenu label="Expedientes" icon="pi pi-folder-open">
-                        <p:menuitem value="Pacientes" icon="pi pi-users" url="editar.xhtml" />
-                        <p:menuitem value="Citas Médicas" icon="pi pi-calendar-plus" url="citas.xhtml" />
-                        <p:menuitem value="Recetas" icon="pi pi-money-bill" url="recetas.xhtml" />
-                    </p:submenu>
-                    <p:submenu label="Configuración" icon="pi pi-cog">
-                        <p:menuitem value="Usuarios" icon="pi pi-user-edit" url="configuracion.xhtml" />
-                    </p:submenu>
-                    <f:facet name="options">
-                        <p:commandButton value="Cerrar Sesión" icon="pi pi-sign-out"
-                                         styleClass="ui-button-flat ui-button-plain logout-btn" action="#{LoginBean.salir()}" />
-                    </f:facet>
-                </p:menubar>
-            </h:form>
+            <p:menubar styleClass="ui-menubar">
+                <p:menuitem value="Inicio" icon="pi pi-home" url="inicio.xhtml" />
+                <p:submenu label="Expedientes" icon="pi pi-folder-open">
+                    <p:menuitem value="Pacientes" icon="pi pi-users" url="editar.xhtml" />
+                    <p:menuitem value="Citas Médicas" icon="pi pi-calendar-plus" url="citas.xhtml" />
+                    <p:menuitem value="Recetas" icon="pi pi-money-bill" url="facturacion.xhtml" />
+                </p:submenu>
+                <p:submenu label="Configuración" icon="pi pi-cog">
+                    <p:menuitem value="Usuarios" icon="pi pi-user-edit" url="configuracion.xhtml" />
+                </p:submenu>
+                <f:facet name="options">
+                    <p:commandButton value="Cerrar Sesión" icon="pi pi-sign-out"
+                                     styleClass="ui-button-flat ui-button-plain logout-btn"
+                                     action="#{LoginBean.salir()}"
+                                     process="@this" />
+                </f:facet>
+            </p:menubar>
         </h:form>
     </div>
 
@@ -50,30 +50,12 @@
 
             <h4 style="color: #2c3e50; text-align: left;">Equipo de Desarrollo:</h4>
             <div class="team-list">
-                <div class="team-item">
-                    <span class="team-name">Jenson Geovany Arita Reyes</span>
-                    <span class="team-id">Cuenta: 201230010015</span>
-                </div>
-                <div class="team-item">
-                    <span class="team-name">Manuel Alejandro Linares Valenzuela</span>
-                    <span class="team-id">Cuenta: 202410011073</span>
-                </div>
-                <div class="team-item">
-                    <span class="team-name">Michael Javier Turcios Aparicio</span>
-                    <span class="team-id">Cuenta: 202020010114</span>
-                </div>
-                <div class="team-item">
-                    <span class="team-name">Cesar Leonardo Arana Santos</span>
-                    <span class="team-id">Cuenta: 201630020056</span>
-                </div>
-                <div class="team-item">
-                    <span class="team-name">Nathaly Melissa Aguilar Gomez</span>
-                    <span class="team-id">Cuenta: 202210110121</span>
-                </div>
-                <div class="team-item">
-                    <span class="team-name">Gabriela Maria Franco</span>
-                    <span class="team-id">Cuenta: 201810110007</span>
-                </div>
+                <div class="team-item"><span class="team-name">Jenson Geovany Arita Reyes</span></div>
+                <div class="team-item"><span class="team-name">Manuel Alejandro Linares Valenzuela</span></div>
+                <div class="team-item"><span class="team-name">Michael Javier Turcios Aparicio</span></div>
+                <div class="team-item"><span class="team-name">Cesar Leonardo Arana Santos</span></div>
+                <div class="team-item"><span class="team-name">Nathaly Melissa Aguilar Gomez</span></div>
+                <div class="team-item"><span class="team-name">Gabriela Maria Franco</span></div>
             </div>
         </p:panel>
 
